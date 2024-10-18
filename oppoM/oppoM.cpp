@@ -37,6 +37,14 @@ public:
     }
 };
 
+enum Choice {
+    SizeSort,
+    DateSort,
+    NonSort,
+    TimeRange,
+    SizeRange
+};
+
 tm parseDate(const std::string& dateStr) {
     tm date = {};
     std::istringstream ss(dateStr);
@@ -106,16 +114,16 @@ int main() {
 
     int choice;
     std::cout << "Выберите метод сортировки:\n"
-        << "1)По размеру файла (largest to smallest)\n"
-        << "2) По дате создания\n"
-        << "3) Без сортировки\n"
-        << "4) Вывод по временному промежутку\n"
-        << "5) Вывод по промежутку размеров\n"
-        << "Выберите цифру (1-5): ";
+        << "0)По размеру файла (largest to smallest)\n"
+        << "1) По дате создания\n"
+        << "2) Без сортировки\n"
+        << "3) Вывод по временному промежутку\n"
+        << "4) Вывод по промежутку размеров\n"
+        << "Выберите цифру (0-4): ";
     std::cin >> choice;
 
     switch (choice) {
-    case 1:
+    case SizeSort:
         sort(fileList.begin(), fileList.end(), [](const files& a, const files& b) {
             return a.getSize() < b.getSize(); // Сортировка по размеру от большего к меньшему  
             });
@@ -123,7 +131,7 @@ int main() {
             file.display(std::cout); // Выводим на экран  
         }
         break;
-    case 2:
+    case DateSort:
         sort(fileList.begin(), fileList.end(), [](const files& a, const files& b) {
             return mktime(const_cast<tm*>(&a.getCreationDate())) < mktime(const_cast<tm*>(&b.getCreationDate())); // Сортировка по дате создания  
             });
@@ -131,13 +139,13 @@ int main() {
             file.display(std::cout); // Выводим на экран  
         }
         break;
-    case 3:
+    case NonSort:
         for (const auto& file : fileList) {
             file.display(std::cout); // Выводим на экран  
         }
         // Выводим в том порядке, в каком есть  
         break;
-    case 4:
+    case TimeRange:
     {
         std::string start_date_str, end_date_str;
         std::cout << "Введите начальную дату (ГГГГ.ММ.ДД): ";
@@ -169,7 +177,7 @@ int main() {
         }
         break;
     }
-    case 5:
+    case SizeRange:
     {
         int start_size, end_size;
         std::cout << "Введите начальный размер файла: ";
@@ -202,5 +210,6 @@ int main() {
         std::cout << "Такого числа нет в списке.\n";
         return 1;
     }
+
     return 0;
 }
